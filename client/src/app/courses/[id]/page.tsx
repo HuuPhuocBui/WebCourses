@@ -9,20 +9,25 @@ import Footer from "@/components/Footer";
 export default function CourseDetailPage() {
   const { id } = useParams();
   const [course, setCourse] = useState<any>(null);
+  const [content, setContent] = useState<any>(null);
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/courses/${id}`)
       .then((res) => res.json())
       .then(setCourse);
+
+    fetch(`http://localhost:8000/api/courses/${id}/contents`)
+      .then((res) => res.json())
+      .then(setContent);
   }, [id]);
 
-  if (!course) return <div className="p-4">Loading...</div>;
+  if (!course || !content) return <div className="p-4">Loading...</div>;
 
   return (
     <>
       <Header />
       <div className="w-full px-6 py-8 pl-36 grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#0f0f0f] text-white">
-        <div className="md:col-span-2 ">
+        <div >
           <p className="text-sm text-gray-500 mb-1">
             CNTT & Phần mềm {">"} Amazon AWS
           </p>
@@ -42,15 +47,41 @@ export default function CourseDetailPage() {
 
       <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-8 ">
         <div className="md:col-span-2 ">
-          {/* Nội dung học (giả lập) */}
+          {/* Nội dung học từ API */}
           <div className="mt-8 border border-gray-300 p-2 rounded">
-            <h2 className="text-xl font-semibold mb-2">Nội dung bài học</h2>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-700 list-disc list-inside">
-              <li>Hiểu về các dịch vụ cốt lõi của AWS</li>
-              <li>Hiểu về kiến trúc toàn cầu và mô hình trách nhiệm chia sẻ</li>
-              <li>Quản lý chi phí & bảo mật</li>
-              <li>Bài học thực tế và cấu hình trên AWS</li>
-            </ul>
+            <h2 className="text-xl font-semibold mb-2">Nội dung khóa học</h2>
+            <p className="text-sm text-gray-600 mb-2">
+              {content.totalLectures} bài giảng • {content.totalDuration}
+            </p>
+            <div className="space-y-2">
+              {content.sections.map((section: any, index: number) => (
+                <details
+                  key={index}
+                  className="border rounded group"
+                >
+                  <summary className="cursor-pointer font-semibold p-4 bg-gray-100 flex justify-between items-center">
+                    <span>{section.title}</span>
+                    <span className="text-sm text-gray-500">
+                      {section.lecturesCount} bài giảng • {section.duration}
+                    </span>
+                  </summary>
+                  <ul className="p-4 pt-2 space-y-2 text-sm text-gray-700">
+                    {section.lectures.map((lec: any, j: number) => (
+                      <li key={j} className="flex justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-500">📄</span>
+                          <span>{lec.title}</span>
+                          {lec.previewable && (
+                            <a href="#" className="text-purple-600 ml-2 hover:underline">Xem trước</a>
+                          )}
+                        </div>
+                        <span className="text-gray-500">{lec.duration}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
+            </div>
           </div>
 
           {/* Các chủ đề liên quan */}
