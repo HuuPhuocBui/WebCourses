@@ -20,3 +20,15 @@ exports.getCourseById = async (req, res) => {
   }
 };
 
+exports.getCourseContentById = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id).select("content");
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    res.json(course.content);
+  } catch (err) {
+    res.status(500).json({ message: "Error loading course content", error: err.message });
+  }
+};
+
