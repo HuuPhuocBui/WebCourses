@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CourseList() {
   const [courses, setCourses] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     fetch("http://localhost:8000/api/courses")
@@ -15,7 +17,11 @@ export default function CourseList() {
       <h2 className="text-xl font-bold mb-6">Được đề xuất cho bạn</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {courses.map((course: any) => (
-          <div key={course._id} className="border rounded shadow p-4">
+          <div
+            key={course._id}
+            onClick={() => router.push(`/courses/${course._id}`)}
+            className="border rounded shadow p-4 cursor-pointer hover:shadow-lg transition"
+          >
             <img src={course.image} alt={course.title} className="w-full h-40 object-cover rounded" />
             <h3 className="font-semibold mt-2 line-clamp-2 text-sm">{course.title}</h3>
             <p className="text-sm text-gray-500">{course.author}</p>
@@ -35,3 +41,4 @@ export default function CourseList() {
     </section>
   );
 }
+
