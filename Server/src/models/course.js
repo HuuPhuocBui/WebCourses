@@ -28,7 +28,15 @@ const courseSchema = new mongoose.Schema({
   oldPrice: { type: Number },
   image: { type: String },
   isBestSeller: { type: Boolean, default: false },
-  content: contentSchema // ✅ THÊM VÀO ĐÂY
+  content: contentSchema, 
+  whatYouWillLearn: [{ type: String }],
+  // 🔗 Liên kết giảng viên
+  instructorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Instructor",
+    required: true
+  }
+  
 });
 
 module.exports = mongoose.model("Course", courseSchema);

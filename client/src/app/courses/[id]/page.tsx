@@ -27,7 +27,7 @@ export default function CourseDetailPage() {
     <>
       <Header />
       <div className="w-full px-6 py-8 pl-36 grid grid-cols-1 md:grid-cols-3 gap-8 bg-[#0f0f0f] text-white">
-        <div >
+        <div>
           <p className="text-sm text-gray-500 mb-1">
             CNTT & Phần mềm {">"} Amazon AWS
           </p>
@@ -47,18 +47,32 @@ export default function CourseDetailPage() {
 
       <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-8 ">
         <div className="md:col-span-2 ">
+          {/* What you'll learn */}
+          {course.whatYouWillLearn?.length > 0 && (
+            <div className="mt-12 px-6 md:px-0 border border-gray-300 p-4 rounded">
+              <h2 className="text-2xl font-semibold mb-4 p-2">
+                What you'll learn
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3 p-2">
+                {course.whatYouWillLearn.map((item: string, index: number) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <span className="text-purple-600 text-lg mt-1">✔</span>
+                    <p className="text-gray-800">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {/* Nội dung học từ API */}
-          <div className="mt-8 border border-gray-300 p-2 rounded">
+          <div className="mt-8 ">
             <h2 className="text-xl font-semibold mb-2">Nội dung khóa học</h2>
             <p className="text-sm text-gray-600 mb-2">
               {content.totalLectures} bài giảng • {content.totalDuration}
             </p>
-            <div className="space-y-2">
+            <div>
               {content.sections.map((section: any, index: number) => (
-                <details
-                  key={index}
-                  className="border rounded group"
-                >
+                <details key={index} className="border group">
                   <summary className="cursor-pointer font-semibold p-4 bg-gray-100 flex justify-between items-center">
                     <span>{section.title}</span>
                     <span className="text-sm text-gray-500">
@@ -72,7 +86,12 @@ export default function CourseDetailPage() {
                           <span className="text-gray-500">📄</span>
                           <span>{lec.title}</span>
                           {lec.previewable && (
-                            <a href="#" className="text-purple-600 ml-2 hover:underline">Xem trước</a>
+                            <a
+                              href="#"
+                              className="text-purple-600 ml-2 hover:underline"
+                            >
+                              Xem trước
+                            </a>
                           )}
                         </div>
                         <span className="text-gray-500">{lec.duration}</span>
@@ -97,48 +116,75 @@ export default function CourseDetailPage() {
               <span className="bg-gray-100 px-3 py-1 rounded">Cloud</span>
             </div>
           </div>
+           {/* thông tin giảng viên */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold mb-3">Giảng viên</h2>
+          <div className="flex gap-4 items-center">
+            <img
+              src={course.instructorId.avatar}
+              className="w-20 h-20 rounded-full"
+            />
+            <div>
+              <h3 className="text-lg font-bold">{course.instructorId.name}</h3>
+              <p className="text-sm text-gray-600">
+                {course.instructorId.title}
+              </p>
+              <p className="text-sm text-gray-500">
+                ⭐ {course.instructorId.rating} • 👥{" "}
+                {course.instructorId.students} học viên
+              </p>
+            </div>
+          </div>
         </div>
+        </div>
+       
 
-        {/* Right - Purchase Box */}
-        <div className="shadow-lg border rounded-lg overflow-hidden">
-          <img
-            src={course.image}
-            alt={course.title}
-            className="w-full h-48 object-cover"
-          />
-          <div className="p-4">
-            <p className="text-2xl font-bold text-gray-900">
-              {course.price.toLocaleString()} đ
-            </p>
+        <div className="md:col-span-1 flex md:justify-end">
+          <div className="shadow-lg border rounded-lg overflow-hidden h-fit w-full max-w-[320px] sticky top-24">
+            {/* Right - Purchase Box */}
+            <div className="shadow-lg border rounded-lg overflow-hidden">
+              <img
+                src={course.image}
+                alt={course.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-4">
+                <p className="text-2xl font-bold text-gray-900">
+                  {course.price.toLocaleString()} đ
+                </p>
 
-            <div className="flex flex-col gap-2 mt-4">
-              <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded">
-                Thêm vào giỏ hàng
-              </button>
-              <button className="border border-purple-600 text-purple-600 font-semibold py-2 rounded hover:bg-purple-50">
-                Mua ngay
-              </button>
-            </div>
+                <div className="flex flex-col gap-2 mt-4">
+                  <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded">
+                    Thêm vào giỏ hàng
+                  </button>
+                  <button className="border border-purple-600 text-purple-600 font-semibold py-2 rounded hover:bg-purple-50">
+                    Mua ngay
+                  </button>
+                </div>
 
-            <p className="text-xs text-gray-500 mt-3">
-              Đảm bảo hoàn tiền trong 30 ngày
-            </p>
+                <p className="text-xs text-gray-500 mt-3">
+                  Đảm bảo hoàn tiền trong 30 ngày
+                </p>
 
-            <div className="mt-4 text-sm text-gray-700">
-              <p>✔ 5,5 giờ video theo yêu cầu</p>
-              <p>✔ Truy cập trên thiết bị di động và TV</p>
-              <p>✔ Quyền truy cập đầy đủ suốt đời</p>
-              <p>✔ Giấy chứng nhận hoàn thành</p>
-            </div>
+                <div className="mt-4 text-sm text-gray-700">
+                  <p>✔ 5,5 giờ video theo yêu cầu</p>
+                  <p>✔ Truy cập trên thiết bị di động và TV</p>
+                  <p>✔ Quyền truy cập đầy đủ suốt đời</p>
+                  <p>✔ Giấy chứng nhận hoàn thành</p>
+                </div>
 
-            <div className="text-xs text-blue-600 underline mt-3 ">
-              <p>Chia sẻ • Tặng khóa học này</p>
-              <p className="mt-1">Áp dụng coupon</p>
+                <div className="text-xs text-blue-600 underline mt-3 ">
+                  <p>Chia sẻ • Tặng khóa học này</p>
+                  <p className="mt-1">Áp dụng coupon</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <Footer />
     </>
   );
 }
+// border border-gray-300 p-2 rounded
