@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllCourses, getCourseById } = require("../controller/course");
-
 const { getAllCourses, getCourseById, getCourseContentById} = require("../controller/course");
 
 
