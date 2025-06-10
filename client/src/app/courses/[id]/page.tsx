@@ -10,6 +10,25 @@ export default function CourseDetailPage() {
   const { id } = useParams();
   const [course, setCourse] = useState<any>(null);
   const [content, setContent] = useState<any>(null);
+  const handleAddToCart = () => {
+  console.log("clicked");
+ 
+
+
+  // Kiểm tra nếu không có "token" trong localStorage → xem như chưa đăng nhập
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  console.log("TOKEN:", token); // thêm dòng này
+
+  if (!token) {
+    alert("Vui lòng đăng nhập hoặc đăng ký để tiếp tục!");
+    return;
+  }
+
+  console.log("Thêm vào giỏ hàng thành công!");
+};
+
+
 
   useEffect(() => {
     fetch(`http://localhost:8000/api/courses/${id}`)
@@ -116,29 +135,29 @@ export default function CourseDetailPage() {
               <span className="bg-gray-100 px-3 py-1 rounded">Cloud</span>
             </div>
           </div>
-           {/* thông tin giảng viên */}
-        <div className="mt-10">
-          <h2 className="text-2xl font-semibold mb-3">Giảng viên</h2>
-          <div className="flex gap-4 items-center">
-            <img
-              src={course.instructorId.avatar}
-              className="w-20 h-20 rounded-full"
-            />
-            <div>
-              <h3 className="text-lg font-bold">{course.instructorId.name}</h3>
-              <p className="text-sm text-gray-600">
-                {course.instructorId.title}
-              </p>
-              <p className="text-sm text-gray-500">
-                ⭐ {course.instructorId.rating} • 👥{" "}
-                {course.instructorId.students} học viên
-              </p>
+          {/* thông tin giảng viên */}
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-3">Giảng viên</h2>
+            <div className="flex gap-4 items-center">
+              <img
+                src={course.instructorId.avatar}
+                className="w-20 h-20 rounded-full"
+              />
+              <div>
+                <h3 className="text-lg font-bold">
+                  {course.instructorId.name}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {course.instructorId.title}
+                </p>
+                <p className="text-sm text-gray-500">
+                  ⭐ {course.instructorId.rating} • 👥{" "}
+                  {course.instructorId.students} học viên
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        </div>
-       
-
         <div className="md:col-span-1 flex md:justify-end">
           <div className="shadow-lg border rounded-lg overflow-hidden h-fit w-full max-w-[320px] sticky top-24">
             {/* Right - Purchase Box */}
@@ -154,7 +173,10 @@ export default function CourseDetailPage() {
                 </p>
 
                 <div className="flex flex-col gap-2 mt-4">
-                  <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded">
+                  <button
+                    onClick={handleAddToCart}
+                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 rounded"
+                  >
                     Thêm vào giỏ hàng
                   </button>
                   <button className="border border-purple-600 text-purple-600 font-semibold py-2 rounded hover:bg-purple-50">
