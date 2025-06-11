@@ -1,16 +1,35 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
-import { FaEnvelope } from 'react-icons/fa';
-import SocialLoginOptions from '@/components/SocialLoginOptions';
+import Link from "next/link";
+import { useState } from "react";
+import { FaEnvelope } from "react-icons/fa";
+import SocialLoginOptions from "@/components/SocialLoginOptions";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    alert(`Đăng nhập với email: ${email}, mật khẩu: ${password}`);
+  const handleLogin = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.access_token) {
+        localStorage.setItem("token", data.access_token);
+        alert("Đăng nhập thành công!");
+        window.location.href = "/"; // hoặc '/dashboard' tùy bạn
+      } else {
+        alert(data.message || "Sai email hoặc mật khẩu!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Có lỗi xảy ra khi đăng nhập.");
+    }
   };
 
   return (
@@ -46,12 +65,14 @@ export default function LoginPage() {
       <SocialLoginOptions />
 
       <div className="text-sm text-gray-600 bg-gray-100 w-full max-w-md text-center py-4 rounded-md">
-        Bạn không có tài khoản?{' '}
-        <Link href="/register" className="text-purple-600 font-semibold hover:underline">
+        Bạn không có tài khoản?{" "}
+        <Link
+          href="/register"
+          className="text-purple-600 font-semibold hover:underline"
+        >
           Đăng ký
         </Link>
       </div>
     </div>
   );
 }
-

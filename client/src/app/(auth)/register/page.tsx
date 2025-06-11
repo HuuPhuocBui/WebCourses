@@ -5,13 +5,37 @@ import { useState } from 'react';
 import { FaEnvelope } from 'react-icons/fa';
 import SocialLoginOptions from '@/components/SocialLoginOptions';
 
-
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
-    alert(`Đăng ký với email: ${email}, mật khẩu: ${password}`);
+  const handleRegister = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        if (data.access_token) {
+          localStorage.setItem('token', data.access_token);
+        }
+
+        alert('Đăng ký thành công!');
+        window.location.href = '/login';
+      } else {
+        alert(data.message || 'Đăng ký thất bại!');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Có lỗi xảy ra khi đăng ký.');
+    }
   };
 
   return (
@@ -43,8 +67,8 @@ export default function RegisterPage() {
         <FaEnvelope />
         Đăng ký
       </button>
-      <SocialLoginOptions />
 
+      <SocialLoginOptions />
 
       <div className="text-sm text-gray-600 mt-6 bg-gray-100 w-full max-w-md text-center py-4 rounded-md">
         Bạn đã có tài khoản?{' '}
